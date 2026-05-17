@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedDigital — Healthcare Digital Services</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0DCFB5;
+    --teal-dim: #08a391;
+    --blue: #1A9BE8;
+    --navy: #080E1A;
+    --surface: #0E1826;
+    --card: #111E2E;
+    --card2: #162233;
+    --border: rgba(255,255,255,0.07);
+    --text: #E2EAF4;
+    --muted: #7A93AE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  h1,h2,h3,h4,h5 { font-family: 'Sora', sans-serif; }
+
+  /* ---- BG MESH ---- */
+  .mesh-bg {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+  }
+  .mesh-orb {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.18;
+  }
+
+  /* ---- GLASSMORPHISM ---- */
+  .glass {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+  }
+  .glass-strong {
+    background: rgba(13,207,181,0.07);
+    border: 1px solid rgba(13,207,181,0.18);
+    backdrop-filter: blur(20px);
+  }
+
+  /* ---- GRADIENT TEXT ---- */
+  .grad-text {
+    background: linear-gradient(135deg, #0DCFB5, #1A9BE8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .grad-text-warm {
+    background: linear-gradient(135deg, #f7b73c, #f05c5c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity:0.6; }
+    100% { transform: scale(1.6); opacity:0; }
+  }
+  @keyframes slide-up {
+    from { opacity:0; transform: translateY(30px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity:0; } to { opacity:1; }
+  }
+  @keyframes dot-blink {
+    0%,100% { opacity:1; } 50% { opacity:0.3; }
+  }
+  @keyframes bar-grow {
+    from { height: 0; } to { height: var(--h); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .float-anim { animation: float 4s ease-in-out infinite; }
+  .slide-up { animation: slide-up 0.7s ease both; }
+  .fade-in { animation: fade-in 1s ease both; }
+
+  /* ---- MOBILE MOCKUP ---- */
+  .phone-frame {
+    width: 220px;
+    min-height: 440px;
+    border-radius: 32px;
+    border: 3px solid rgba(255,255,255,0.12);
+    background: #0a0f18;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .phone-notch {
+    width: 70px; height: 18px;
+    background: #0a0f18;
+    border-radius: 0 0 14px 14px;
+    margin: 0 auto;
+    position: relative; z-index: 10;
+    border: 2px solid rgba(255,255,255,0.08);
+    border-top: none;
+  }
+  .phone-screen {
+    padding: 0 0 10px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 14px;
+    font-size: 9px; color: rgba(255,255,255,0.6);
+    font-family: 'Sora', sans-serif;
+  }
+  .app-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ---- NAV ---- */
+  .nav-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); opacity: 0.7;
+    animation: dot-blink 2s infinite;
+  }
+
+  /* ---- CARD HOVER ---- */
+  .hover-card {
+    transition: transform 0.28s cubic-bezier(.2,.8,.3,1), box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+  .hover-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(13,207,181,0.1);
+    border-color: rgba(13,207,181,0.3) !important;
+  }
+
+  /* ---- SECTION ---- */
+  section { position: relative; }
+
+  /* ---- PRICING ---- */
+  .pricing-highlight {
+    background: linear-gradient(135deg, rgba(13,207,181,0.15), rgba(26,155,232,0.1));
+    border: 1px solid rgba(13,207,181,0.3);
+  }
+
+  /* ---- TIMELINE CONNECTOR ---- */
+  .flow-line {
+    width: 2px; height: 48px;
+    background: linear-gradient(to bottom, var(--teal), transparent);
+    margin: 0 auto;
+  }
+
+  /* ---- TAG PILL ---- */
+  .tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ---- SCROLLBAR ---- */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--teal-dim); border-radius: 99px; }
+
+  /* ---- EXTRA POLISH ---- */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    z-index: 200;
+    background: linear-gradient(90deg, var(--teal), var(--blue), #f7b73c);
+    box-shadow: 0 0 18px rgba(13,207,181,0.45);
+  }
+  .premium-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .premium-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 38%, rgba(13,207,181,0.06));
+    opacity: 0;
+    transition: opacity 0.28s ease;
+  }
+  .premium-card:hover::before { opacity: 1; }
+  .shine-button {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 18px 38px rgba(13,207,181,0.18);
+  }
+  .shine-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -45%;
+    width: 36%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: skewX(-18deg);
+    animation: button-shine 4.6s ease-in-out infinite;
+  }
+  @keyframes button-shine {
+    0%, 62% { left: -45%; }
+    100% { left: 130%; }
+  }
+  .trust-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 10px;
+    max-width: 520px;
+    margin-top: 28px;
+  }
+  .trust-item {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 14px;
+    background: rgba(255,255,255,0.035);
+  }
+  .trust-item strong {
+    display: block;
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    color: var(--text);
+  }
+  .trust-item span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .journey-card {
+    min-height: 100%;
+    border-radius: 20px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025));
+  }
+  .journey-step {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #041016;
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    background: linear-gradient(135deg,var(--teal),var(--blue));
+    box-shadow: 0 12px 28px rgba(13,207,181,0.2);
+    margin-bottom: 20px;
+  }
+  .mini-dashboard {
+    border-radius: 28px;
+    padding: 22px;
+    background: linear-gradient(135deg, rgba(13,207,181,0.09), rgba(26,155,232,0.06));
+    border: 1px solid rgba(13,207,181,0.18);
+  }
+  .dashboard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .dashboard-row:last-child { border-bottom: 0; }
+  .metric-bar {
+    height: 7px;
+    width: 120px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .metric-bar span {
+    display: block;
+    height: 100%;
+    width: var(--w);
+    border-radius: inherit;
+    background: linear-gradient(90deg,var(--teal),var(--blue));
+  }
+  @media (max-width: 760px) {
+    .trust-strip { grid-template-columns: 1fr; }
+    .journey-hero { grid-template-columns: 1fr !important; }
+    .desktop-soft-hide { display: none !important; }
+  }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============================================================ NAVBAR -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,14,26,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);">
+  <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;">
+        <span style="color:#000;font-size:14px;font-weight:800;font-family:'Sora',sans-serif;">M</span>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.3px;">MedDigital<span style="color:var(--teal)">.</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="nav-dot"></div>
+      <span style="font-size:12px;color:var(--muted);">Professional Doctor Websites</span>
+    </div>
+    <a href="#contact" style="padding:8px 20px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#000;font-size:13px;font-weight:700;font-family:'Sora',sans-serif;text-decoration:none;">Get Started</a>
+  </div>
+</nav>
+
+<!-- ============================================================ S1: HERO -->
+<section style="min-height:100vh;display:flex;align-items:center;padding-top:80px;overflow:hidden;">
+  <div class="mesh-bg">
+    <div class="mesh-orb" style="width:600px;height:600px;background:radial-gradient(circle,#0DCFB5,transparent);top:-100px;left:-150px;"></div>
+    <div class="mesh-orb" style="width:500px;height:500px;background:radial-gradient(circle,#1A9BE8,transparent);top:200px;right:-100px;"></div>
+    <div class="mesh-orb" style="width:300px;height:300px;background:radial-gradient(circle,#5B3BE8,transparent);bottom:0;left:40%;"></div>
+    <!-- Grid lines -->
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.04" xmlns="http://www.w3.org/2000/svg">
+      <defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="#fff" stroke-width="1"/></pattern></defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:60px 24px;position:relative;z-index:2;width:100%;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+      <div class="slide-up">
+        <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:20px;">Healthcare Digital Services</div>
+        <h1 style="font-size:clamp(36px,5vw,60px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px;">
+          Making Healthcare<br><span class="grad-text">Digitally Accessible</span>
+        </h1>
+        <p style="font-size:17px;color:var(--muted);line-height:1.7;max-width:480px;margin-bottom:12px;">
+          Affordable digital infrastructure for doctors and clinics — professionally designed, locally supported, and built to scale.
+        </p>
+        <p style="font-size:14px;color:var(--teal);font-weight:500;margin-bottom:36px;">📍 Designed for Modern Healthcare Clinics</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="#solution" class="shine-button" style="padding:14px 28px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#000;font-weight:700;font-size:15px;text-decoration:none;font-family:'Sora',sans-serif;">Explore Our Solution</a>
+          <a href="#pricing" style="padding:14px 28px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);color:var(--text);font-weight:500;font-size:15px;text-decoration:none;">View Pricing →</a>
+        </div>
+        <div class="trust-strip">
+          <div class="trust-item">
+            <strong>7-10</strong>
+            <span>day launch target for standard clinic sites</span>
+          </div>
+          <div class="trust-item">
+            <strong>24/7</strong>
+            <span>patient access to timings, location, and booking</span>
+          </div>
+          <div class="trust-item">
+            <strong>0</strong>
+            <span>monthly platform fee during the starter phase</span>
+          </div>
+        </div>
+      </div>
+      <!-- Hero visual -->
+      <div style="display:flex;justify-content:center;gap:24px;align-items:flex-end;" class="float-anim">
+        <!-- Small stat cards -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="glass" style="border-radius:16px;padding:16px 20px;">
+            <div style="font-size:24px;font-weight:800;font-family:'Sora',sans-serif;" class="grad-text">500+</div>
+            <div style="font-size:11px;color:var(--muted);">Potential Clinics</div>
+          </div>
+          <div class="glass" style="border-radius:16px;padding:16px 20px;">
+            <div style="font-size:24px;font-weight:800;font-family:'Sora',sans-serif;color:#f7b73c;">₹15K</div>
+            <div style="font-size:11px;color:var(--muted);">Starting Price</div>
+          </div>
+          <div class="glass" style="border-radius:16px;padding:16px 20px;">
+            <div style="font-size:24px;font-weight:800;font-family:'Sora',sans-serif;color:#5ff580;">6 Mo</div>
+            <div style="font-size:11px;color:var(--muted);">Free Maintenance</div>
+          </div>
+        </div>
+        <!-- Mini phone mockup in hero -->
+        <div class="phone-frame" style="width:180px;min-height:360px;">
+          <div class="phone-notch"></div>
+          <div style="padding:0 10px 10px;">
+            <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+            <div style="background:linear-gradient(135deg,#0f2535,#0a1a28);border-radius:12px;padding:12px;margin-bottom:8px;">
+              <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));margin:0 auto 8px;"></div>
+              <div style="text-align:center;font-size:10px;font-weight:700;font-family:'Sora',sans-serif;">Dr. Priya Sharma</div>
+              <div style="text-align:center;font-size:8px;color:var(--muted);">Cardiologist · City Hospital</div>
+              <div style="display:flex;gap:4px;margin-top:8px;">
+                <div style="flex:1;background:rgba(13,207,181,0.2);border-radius:6px;padding:4px;text-align:center;font-size:7px;color:var(--teal);">📞 Call</div>
+                <div style="flex:1;background:rgba(37,211,102,0.2);border-radius:6px;padding:4px;text-align:center;font-size:7px;color:#25D366;">💬 WhatsApp</div>
+              </div>
+            </div>
+            <div style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:10px;padding:8px;margin-bottom:6px;">
+              <div style="font-size:8px;font-weight:600;color:var(--teal);margin-bottom:4px;">📅 Book Appointment</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;">
+                <div style="background:rgba(13,207,181,0.2);border-radius:4px;padding:3px;text-align:center;font-size:7px;">Mon</div>
+                <div style="background:rgba(255,255,255,0.05);border-radius:4px;padding:3px;text-align:center;font-size:7px;">Tue</div>
+                <div style="background:rgba(13,207,181,0.2);border-radius:4px;padding:3px;text-align:center;font-size:7px;">Wed</div>
+                <div style="background:rgba(255,255,255,0.05);border-radius:4px;padding:3px;text-align:center;font-size:7px;">Thu</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px;font-size:7px;color:var(--muted);line-height:1.5;">
+              📍 Medical College Road<br>⏰ Mon–Sat: 10am – 2pm<br>🟢 Available Today
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S2: PATIENT PROBLEMS -->
+<section id="problems" style="padding:100px 24px;background:linear-gradient(to bottom, var(--navy), var(--surface));">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(240,92,92,0.12);color:#f05c5c;margin-bottom:16px;">The Real Problems</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">What Patients Face Daily</h2>
+      <p style="color:var(--muted);max-width:520px;margin:12px auto 0;font-size:16px;line-height:1.6;">Every patient has experienced these frustrations. It's time to solve them.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+      <!-- Problem cards -->
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">📵</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Hard to Contact Doctors</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Patients struggle to find correct phone numbers or reach clinics — especially in emergencies.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">📋</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">No Online Appointment System</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Booking a visit requires multiple calls, often with no confirmation or record of the appointment.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">❓</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Doctor Availability Unknown</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Patients travel far only to find the doctor unavailable or the clinic closed that day.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">⏳</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Long Waiting Times</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Hours spent waiting without any idea about queue length or expected appointment time.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">👥</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">No Crowd Visibility</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">No way to know if the clinic is overcrowded before travelling all the way there.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">🗺️</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Hard to Find Location</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Clinic addresses online are outdated or missing, leading to confusion and wasted trips.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">🔍</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Poor Clinic Info Online</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Services, timings, fees — patients can't find basic clinic information anywhere online.</p>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:32px;margin-bottom:14px;">🤔</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">No Trust Before Visiting</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6;">Without an online presence, patients have no way to verify credentials or read reviews before their visit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S3: DOCTOR PROBLEMS -->
+<section style="padding:100px 24px;background:var(--surface);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(247,183,60,0.12);color:#f7b73c;margin-bottom:16px;">For Doctors</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">What Doctors Struggle With</h2>
+      <p style="color:var(--muted);max-width:520px;margin:12px auto 0;font-size:16px;line-height:1.6;">Managing a clinic today means juggling constant calls and no proper system.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">📞</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Constant Repetitive Calls</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Staff spends hours answering the same questions about timings, availability, and directions — every single day.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">🗓️</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Appointment Confusion</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Manual booking leads to double bookings, missed appointments, and frustrated patients at reception.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">🌐</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">No Online Visibility</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">When patients search for doctors online, your clinic doesn't appear — losing new patients every day.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">💼</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Poor Digital Branding</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">No professional digital presence means patients perceive the clinic as less credible compared to others.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">💬</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Unmanaged Communication</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Patient inquiries scattered across personal phone numbers with no organized system.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(247,183,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;">📉</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Losing Digital Patients</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Patients who search on Google for specialists in your area never find your clinic.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S4: SOLUTION -->
+<section id="solution" style="padding:100px 24px;background:linear-gradient(to bottom, var(--surface), var(--navy));">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:16px;">Our Solution</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">Everything Your Clinic Needs Online</h2>
+      <p style="color:var(--muted);max-width:560px;margin:12px auto 0;font-size:16px;line-height:1.6;">One complete digital package — professional, affordable, and built specifically for healthcare clinics.</p>
+    </div>
+
+    <!-- Solution flow -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-bottom:60px;">
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">🌐</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Professional Clinic Website</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Custom-designed, mobile-first website representing your clinic professionally online.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#5B3BE8,#1A9BE8);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">📅</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Appointment Booking System</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Patients book appointments online — no more phone confusion or double bookings.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">💬</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">WhatsApp Integration</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">One-tap WhatsApp connection directly from your clinic page for instant patient communication.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#f7b73c,#f05c5c);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">⏰</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Availability Management</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Update your available days and clinic hours easily — patients always see accurate information.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#4285F4,#34A853);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">📍</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Google Maps Integration</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Embedded maps so patients can navigate directly to your clinic with one tap.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:20px;padding:28px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#9b59b6,#3498db);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;">🔍</div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Basic SEO Visibility</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Help patients discover your clinic when they search on Google — locally optimized for Assam.</p>
+      </div>
+    </div>
+
+    <!-- SEO explainer -->
+    <div class="glass reveal" style="border-radius:24px;padding:36px;border:1px solid rgba(13,207,181,0.15);max-width:800px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:rgba(13,207,181,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🔍</div>
+        <h3 style="font-size:18px;font-weight:700;">What is Basic SEO?</h3>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:18px;line-height:1.7;">SEO (Search Engine Optimization) simply means making your clinic easy to find on Google. When a patient in your area searches <span style="color:var(--teal);">"cardiologist near me"</span> or <span style="color:var(--teal);">"best skin doctor near me"</span>, your clinic should appear in the results.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;display:flex;gap:8px;align-items:center;">
+          <span style="color:var(--teal);">✓</span>
+          <span style="font-size:13px;">Mobile-optimized pages</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;display:flex;gap:8px;align-items:center;">
+          <span style="color:var(--teal);">✓</span>
+          <span style="font-size:13px;">Google indexing setup</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;display:flex;gap:8px;align-items:center;">
+          <span style="color:var(--teal);">✓</span>
+          <span style="font-size:13px;">Search-friendly structure</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;display:flex;gap:8px;align-items:center;">
+          <span style="color:var(--teal);">✓</span>
+          <span style="font-size:13px;">Local patient discovery</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S5: LIVE SYSTEM PREVIEW -->
+<section id="preview" style="padding:100px 24px;background:var(--navy);">
+  <div style="max-width:1300px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:70px;">
+      <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:16px;">Live System Preview</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">See What Your Patients Will Experience</h2>
+      <p style="color:var(--muted);max-width:520px;margin:12px auto 0;font-size:16px;line-height:1.6;">Realistic previews of each screen in the clinic digital system.</p>
+    </div>
+
+    <!-- Row 1: 3 phones -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:32px;margin-bottom:50px;">
+
+      <!-- Phone 1: Doctor Profile -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span style="color:var(--teal);">●●●</span></div>
+            <!-- Profile header -->
+            <div style="background:linear-gradient(135deg,#0a1e35,#0d2640);padding:16px 12px 20px;text-align:center;position:relative;">
+              <div style="width:60px;height:60px;border-radius:20px;background:linear-gradient(135deg,#1A9BE8,#0DCFB5);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 8px 24px rgba(13,207,181,0.3);">👨‍⚕️</div>
+              <div style="font-size:13px;font-weight:700;font-family:'Sora',sans-serif;">Dr. Rahul Bora</div>
+              <div style="font-size:10px;color:var(--teal);margin:2px 0;">M.D. Cardiologist</div>
+              <div style="font-size:9px;color:var(--muted);">City Hospital · 12 yrs exp.</div>
+              <div style="display:inline-flex;align-items:center;gap:3px;background:rgba(95,245,128,0.15);border-radius:999px;padding:2px 8px;margin-top:6px;">
+                <span style="width:5px;height:5px;border-radius:50%;background:#5ff580;display:inline-block;"></span>
+                <span style="font-size:9px;color:#5ff580;">Available Today</span>
+              </div>
+            </div>
+            <!-- Timings -->
+            <div style="padding:8px 12px;">
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">Clinic Timings</div>
+              <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">
+                <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;font-size:9px;">
+                  <span>Mon – Fri</span><span style="color:var(--teal);">10:00 AM – 2:00 PM</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;font-size:9px;">
+                  <span>Sat – Sun</span><span style="color:#f7b73c;">5:00 PM – 8:00 PM</span>
+                </div>
+              </div>
+              <!-- Action buttons -->
+              <div style="display:flex;gap:6px;">
+                <button style="flex:1;padding:7px;background:rgba(26,155,232,0.2);border:1px solid rgba(26,155,232,0.3);border-radius:8px;color:#1A9BE8;font-size:9px;font-weight:600;cursor:pointer;">📞 Call</button>
+                <button style="flex:1;padding:7px;background:rgba(37,211,102,0.2);border:1px solid rgba(37,211,102,0.3);border-radius:8px;color:#25D366;font-size:9px;font-weight:600;cursor:pointer;">💬 WhatsApp</button>
+              </div>
+              <button style="width:100%;margin-top:6px;padding:8px;background:linear-gradient(135deg,var(--teal),var(--blue));border:none;border-radius:8px;color:#000;font-size:10px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;">📅 Book Appointment</button>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">Doctor Profile</div><div style="font-size:11px;color:var(--muted);">Complete doctor info page</div></div>
+      </div>
+
+      <!-- Phone 2: Appointment Booking -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span style="color:var(--teal);">●●●</span></div>
+            <div class="app-header" style="padding:8px 12px;">
+              <div style="font-size:11px;font-weight:700;font-family:'Sora',sans-serif;">📅 Book Appointment</div>
+              <div style="font-size:8px;color:var(--muted);">Dr. Rahul Bora</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <!-- Calendar -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Select Date — June 2025</div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:10px;text-align:center;">
+                <div style="font-size:7px;color:var(--muted);padding:2px;">S</div><div style="font-size:7px;color:var(--muted);">M</div><div style="font-size:7px;color:var(--muted);">T</div><div style="font-size:7px;color:var(--muted);">W</div><div style="font-size:7px;color:var(--muted);">T</div><div style="font-size:7px;color:var(--muted);">F</div><div style="font-size:7px;color:var(--muted);">S</div>
+                <div style="font-size:8px;color:rgba(255,255,255,0.2);padding:3px;"></div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">2</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">3</div>
+                <div style="font-size:8px;padding:3px;background:linear-gradient(135deg,var(--teal),var(--blue));border-radius:4px;color:#000;font-weight:700;cursor:pointer;">4</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">5</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">6</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.08);border-radius:4px;color:rgba(255,255,255,0.3);">7</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.08);border-radius:4px;color:rgba(255,255,255,0.3);">8</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">9</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">10</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">11</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">12</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">13</div>
+                <div style="font-size:8px;padding:3px;background:rgba(255,255,255,0.04);border-radius:4px;cursor:pointer;">14</div>
+              </div>
+              <!-- Time slots -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Available Time Slots</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:10px;">
+                <div style="background:rgba(13,207,181,0.15);border:1px solid rgba(13,207,181,0.3);border-radius:6px;padding:4px;text-align:center;font-size:8px;color:var(--teal);cursor:pointer;">10:00</div>
+                <div style="background:linear-gradient(135deg,var(--teal),var(--blue));border-radius:6px;padding:4px;text-align:center;font-size:8px;color:#000;font-weight:700;cursor:pointer;">10:30</div>
+                <div style="background:rgba(13,207,181,0.15);border:1px solid rgba(13,207,181,0.3);border-radius:6px;padding:4px;text-align:center;font-size:8px;color:var(--teal);cursor:pointer;">11:00</div>
+                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:4px;text-align:center;font-size:8px;color:rgba(255,255,255,0.3);cursor:default;">11:30 ✗</div>
+                <div style="background:rgba(13,207,181,0.15);border:1px solid rgba(13,207,181,0.3);border-radius:6px;padding:4px;text-align:center;font-size:8px;color:var(--teal);cursor:pointer;">12:00</div>
+                <div style="background:rgba(13,207,181,0.15);border:1px solid rgba(13,207,181,0.3);border-radius:6px;padding:4px;text-align:center;font-size:8px;color:var(--teal);cursor:pointer;">12:30</div>
+              </div>
+              <!-- Patient form -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Your Details</div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:7px;padding:6px 8px;font-size:8px;color:var(--muted);margin-bottom:4px;">👤 Patient Name</div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:7px;padding:6px 8px;font-size:8px;color:var(--muted);margin-bottom:8px;">📱 Phone Number</div>
+              <button style="width:100%;padding:8px;background:linear-gradient(135deg,var(--teal),var(--blue));border:none;border-radius:8px;color:#000;font-size:10px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;">✓ Confirm Appointment</button>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">Appointment Booking</div><div style="font-size:11px;color:var(--muted);">Select date, time & confirm</div></div>
+      </div>
+
+      <!-- Phone 3: WhatsApp Contact -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+            <div style="background:#128C7E;padding:10px 12px;display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;font-size:12px;">👨‍⚕️</div>
+              <div>
+                <div style="font-size:10px;font-weight:700;">Dr. Rahul Bora Clinic</div>
+                <div style="font-size:8px;opacity:0.8;">Online · typically replies fast</div>
+              </div>
+            </div>
+            <div style="padding:10px 12px;background:#0a1520;flex:1;min-height:200px;">
+              <!-- Chat messages -->
+              <div style="display:flex;justify-content:flex-start;margin-bottom:8px;">
+                <div style="background:#1e3a2f;border-radius:0 10px 10px 10px;padding:7px 10px;max-width:75%;font-size:9px;line-height:1.5;">
+                  👋 Hello! Welcome to Dr. Rahul Bora Clinic. How can we help you today?
+                </div>
+              </div>
+              <div style="font-size:8px;color:var(--muted);text-align:center;margin-bottom:8px;">Quick Options</div>
+              <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">
+                <div style="border:1px solid rgba(18,140,126,0.5);border-radius:8px;padding:5px 10px;font-size:9px;color:#25D366;cursor:pointer;">📅 Book Appointment</div>
+                <div style="border:1px solid rgba(18,140,126,0.5);border-radius:8px;padding:5px 10px;font-size:9px;color:#25D366;cursor:pointer;">⏰ Check Doctor Availability</div>
+                <div style="border:1px solid rgba(18,140,126,0.5);border-radius:8px;padding:5px 10px;font-size:9px;color:#25D366;cursor:pointer;">💊 Ask About Services</div>
+                <div style="border:1px solid rgba(18,140,126,0.5);border-radius:8px;padding:5px 10px;font-size:9px;color:#25D366;cursor:pointer;">📍 Get Clinic Location</div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;margin-bottom:4px;">
+                <div style="background:#005c4b;border-radius:10px 0 10px 10px;padding:7px 10px;max-width:75%;font-size:9px;line-height:1.5;">
+                  I'd like to book an appointment for tomorrow.
+                  <div style="font-size:7px;opacity:0.6;text-align:right;margin-top:2px;">✓✓</div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:6px 10px;background:#1a2a24;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,0.06);">
+              <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:999px;padding:6px 10px;font-size:8px;color:var(--muted);">Type a message...</div>
+              <div style="width:26px;height:26px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;">▶</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">WhatsApp Contact</div><div style="font-size:11px;color:var(--muted);">Direct patient communication</div></div>
+      </div>
+
+    </div>
+
+    <!-- Row 2: 3 phones -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:32px;">
+
+      <!-- Phone 4: Availability Screen -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span style="color:var(--teal);">●●●</span></div>
+            <div class="app-header">
+              <div style="font-size:11px;font-weight:700;font-family:'Sora',sans-serif;">📆 Doctor Availability</div>
+              <div style="font-size:8px;color:var(--muted);">Dr. Rahul Bora — June 2025</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:12px;text-align:center;">
+                <div style="font-size:7px;color:var(--muted);padding:2px;">S</div><div style="font-size:7px;color:var(--muted);">M</div><div style="font-size:7px;color:var(--muted);">T</div><div style="font-size:7px;color:var(--muted);">W</div><div style="font-size:7px;color:var(--muted);">T</div><div style="font-size:7px;color:var(--muted);">F</div><div style="font-size:7px;color:var(--muted);">S</div>
+                <!-- Row: unavailable, available alternating -->
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(255,80,80,0.15);color:#ff5050;">1</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">2</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">3</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">4</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">5</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">6</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(255,80,80,0.15);color:#ff5050;">7</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(255,80,80,0.15);color:#ff5050;">8</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">9</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">10</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(247,183,60,0.2);color:#f7b73c;">11</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">12</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(95,245,128,0.15);color:#5ff580;">13</div>
+                <div style="font-size:7px;padding:4px;border-radius:4px;background:rgba(255,80,80,0.15);color:#ff5050;">14</div>
+              </div>
+              <!-- Legend -->
+              <div style="display:flex;gap:6px;margin-bottom:10px;justify-content:center;">
+                <div style="display:flex;align-items:center;gap:3px;font-size:8px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(95,245,128,0.3);display:inline-block;"></span>Available</div>
+                <div style="display:flex;align-items:center;gap:3px;font-size:8px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(255,80,80,0.3);display:inline-block;"></span>Off Day</div>
+                <div style="display:flex;align-items:center;gap:3px;font-size:8px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(247,183,60,0.3);display:inline-block;"></span>Busy</div>
+              </div>
+              <!-- Crowd indicators -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Today's Queue</div>
+              <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <span style="font-size:9px;">Current patients waiting</span>
+                  <span style="font-size:11px;font-weight:700;color:#f7b73c;">7</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:999px;height:5px;margin-bottom:6px;">
+                  <div style="background:linear-gradient(to right,#5ff580,#f7b73c);width:45%;height:100%;border-radius:999px;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);">
+                  <span>Est. wait: ~35 min</span>
+                  <span style="color:#5ff580;">🟢 Moderate</span>
+                </div>
+              </div>
+              <div style="margin-top:8px;background:rgba(255,255,255,0.04);border-radius:10px;padding:8px 10px;font-size:8px;color:var(--muted);line-height:1.6;">
+                ⏰ Morning: 10:00 AM – 2:00 PM<br>🌙 Evening: 5:00 PM – 8:00 PM
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">Availability Screen</div><div style="font-size:11px;color:var(--muted);">Real-time schedule & queue</div></div>
+      </div>
+
+      <!-- Phone 5: Clinic Info -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+            <div class="app-header">
+              <div style="font-size:11px;font-weight:700;font-family:'Sora',sans-serif;">🏥 Clinic Information</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <!-- Map placeholder -->
+              <div style="background:linear-gradient(135deg,#0d2030,#0a3020);border-radius:10px;height:70px;margin-bottom:8px;position:relative;overflow:hidden;border:1px solid rgba(13,207,181,0.2);">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                  <div style="font-size:18px;">📍</div>
+                  <div style="font-size:8px;color:var(--teal);">View on Google Maps</div>
+                </div>
+                <!-- fake road lines -->
+                <div style="position:absolute;top:30px;left:0;right:0;height:1px;background:rgba(255,255,255,0.06);"></div>
+                <div style="position:absolute;left:50px;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.06);"></div>
+              </div>
+              <!-- Address -->
+              <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:8px;margin-bottom:8px;font-size:8px;line-height:1.7;color:var(--muted);">
+                📍 Bora Medical Centre, Ulubari<br>City Centre, Pin - 781007<br>
+                <span style="color:var(--teal);">→ Get Directions</span>
+              </div>
+              <!-- Services -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Services Offered</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+                <span style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:999px;padding:2px 7px;font-size:8px;color:var(--teal);">Cardiology</span>
+                <span style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:999px;padding:2px 7px;font-size:8px;color:var(--teal);">ECG</span>
+                <span style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:999px;padding:2px 7px;font-size:8px;color:var(--teal);">Echo</span>
+                <span style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:999px;padding:2px 7px;font-size:8px;color:var(--teal);">Consultation</span>
+              </div>
+              <!-- Gallery -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;">Gallery</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">
+                <div style="background:linear-gradient(135deg,#0f2535,#1a3050);border-radius:7px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;">🏥</div>
+                <div style="background:linear-gradient(135deg,#0d2035,#152a40);border-radius:7px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;">🩺</div>
+                <div style="background:linear-gradient(135deg,#0f1e35,#132035);border-radius:7px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;">💊</div>
+              </div>
+              <button style="width:100%;margin-top:8px;padding:7px;background:rgba(26,155,232,0.15);border:1px solid rgba(26,155,232,0.3);border-radius:8px;color:#1A9BE8;font-size:9px;font-weight:600;cursor:pointer;">📞 Call Clinic — 9XXXXXXX</button>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">Clinic Information</div><div style="font-size:11px;color:var(--muted);">Address, services & map</div></div>
+      </div>
+
+      <!-- Phone 6: Analytics Dashboard -->
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar"><span>9:41</span><span style="color:var(--teal);">●●●</span></div>
+            <div class="app-header">
+              <div style="font-size:11px;font-weight:700;font-family:'Sora',sans-serif;">📊 Analytics Dashboard</div>
+              <div style="font-size:8px;color:var(--muted);">Dr. Bora — June 2025</div>
+            </div>
+            <div style="padding:8px 12px;">
+              <!-- Stat cards -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+                <div style="background:rgba(13,207,181,0.1);border:1px solid rgba(13,207,181,0.2);border-radius:10px;padding:8px;">
+                  <div style="font-size:16px;font-weight:800;color:var(--teal);font-family:'Sora',sans-serif;">142</div>
+                  <div style="font-size:8px;color:var(--muted);">Total Bookings</div>
+                  <div style="font-size:8px;color:#5ff580;">↑ +18% this week</div>
+                </div>
+                <div style="background:rgba(26,155,232,0.1);border:1px solid rgba(26,155,232,0.2);border-radius:10px;padding:8px;">
+                  <div style="font-size:16px;font-weight:800;color:#1A9BE8;font-family:'Sora',sans-serif;">87</div>
+                  <div style="font-size:8px;color:var(--muted);">Patient Inquiries</div>
+                  <div style="font-size:8px;color:#5ff580;">↑ +24% this week</div>
+                </div>
+                <div style="background:rgba(247,183,60,0.1);border:1px solid rgba(247,183,60,0.2);border-radius:10px;padding:8px;">
+                  <div style="font-size:16px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">1.2K</div>
+                  <div style="font-size:8px;color:var(--muted);">Page Visitors</div>
+                  <div style="font-size:8px;color:#5ff580;">↑ +31% this week</div>
+                </div>
+                <div style="background:rgba(95,245,128,0.1);border:1px solid rgba(95,245,128,0.2);border-radius:10px;padding:8px;">
+                  <div style="font-size:16px;font-weight:800;color:#5ff580;font-family:'Sora',sans-serif;">96%</div>
+                  <div style="font-size:8px;color:var(--muted);">Confirmation Rate</div>
+                  <div style="font-size:8px;color:#5ff580;">↑ +5% this week</div>
+                </div>
+              </div>
+              <!-- Mini bar chart -->
+              <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;">Daily Visitors (this week)</div>
+              <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:10px;">
+                <div style="display:flex;align-items:flex-end;gap:4px;height:40px;justify-content:space-between;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,var(--teal),var(--blue));width:12px;height:22px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">M</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,var(--teal),var(--blue));width:12px;height:30px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">T</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,var(--teal),var(--blue));width:12px;height:18px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">W</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,var(--teal),var(--blue));width:12px;height:36px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">T</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,var(--teal),var(--blue));width:12px;height:28px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">F</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,#f7b73c,#f05c5c);width:12px;height:40px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">S</div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="background:linear-gradient(to top,#f7b73c,#f05c5c);width:12px;height:34px;border-radius:3px;"></div>
+                    <div style="font-size:6px;color:var(--muted);">S</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;"><div style="font-size:12px;font-weight:700;font-family:'Sora',sans-serif;">Analytics Dashboard</div><div style="font-size:11px;color:var(--muted);">Booking & visitor insights</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S6: BENEFITS FOR DOCTORS -->
+<section style="padding:100px 24px;background:linear-gradient(to bottom,var(--navy),var(--surface));">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:16px;">For Doctors & Clinics</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">How You Benefit</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">🏆</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Better Professional Image</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">A premium website makes your clinic look credible, modern, and trustworthy to every new patient.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">💬</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Easier Patient Communication</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">WhatsApp integration and an online inquiry system reduces unnecessary phone calls dramatically.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">🌐</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Better Online Visibility</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">New patients searching for doctors in your city can now discover and contact your clinic.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">📅</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Organized Appointments</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Structured booking system eliminates double bookings, reduces no-shows, and saves staff time.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">♿</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Better Accessibility</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Patients from surrounding areas can now access your clinic information and book from anywhere.</p>
+        </div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">🤝</div>
+        <div>
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Improved Patient Trust</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">A professional digital presence builds confidence before the patient even walks through your door.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S7: BENEFITS FOR PATIENTS -->
+<section style="padding:80px 24px;background:var(--surface);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(26,155,232,0.12);color:#1A9BE8;margin-bottom:16px;">For Patients</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">A Better Experience for Patients</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">📅</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Easy Online Booking</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Book appointments anytime from home — no need to call or travel just to schedule a visit.</p></div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">⚡</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Faster Communication</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">WhatsApp and direct inquiry means faster responses without being put on hold.</p></div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">📋</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Complete Clinic Information</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Services, timing, fees, location — everything a patient needs, in one place, clearly displayed.</p></div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">🕰️</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">No Wasted Trips</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Check availability before leaving home — know queue length and expected wait times.</p></div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">🗺️</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Easy Location Access</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Google Maps integration guides patients directly to the clinic — no confusion about the address.</p></div>
+      </div>
+      <div class="glass hover-card reveal" style="border-radius:20px;padding:28px;border:1px solid var(--border);display:flex;gap:14px;">
+        <div style="font-size:28px;flex-shrink:0;">💙</div>
+        <div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px;">Better Healthcare Access</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Patients from across the region can find and reach quality healthcare more easily than before.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S8: PRICING -->
+<section id="pricing" style="padding:100px 24px;background:linear-gradient(to bottom,var(--surface),var(--navy));">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(247,183,60,0.12);color:#f7b73c;margin-bottom:16px;">Transparent Pricing</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">Simple, Affordable & Clear</h2>
+      <p style="color:var(--muted);max-width:480px;margin:12px auto 0;font-size:16px;">No hidden fees. No surprises. Everything explained upfront.</p>
+    </div>
+
+    <!-- Main package -->
+    <div class="reveal" style="max-width:680px;margin:0 auto 48px;">
+      <div style="border-radius:28px;padding:48px;background:linear-gradient(135deg,rgba(13,207,181,0.1),rgba(26,155,232,0.08));border:1px solid rgba(13,207,181,0.3);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:20px;right:24px;" class="tag" style="background:rgba(13,207,181,0.2);color:var(--teal);">⭐ Most Popular</div>
+        <div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(13,207,181,0.1),transparent);"></div>
+        <div style="margin-bottom:6px;" class="tag" style="background:rgba(255,255,255,0.05);color:var(--muted);">Starter Package</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin:16px 0 8px;">
+          <span style="font-size:52px;font-weight:800;font-family:'Sora',sans-serif;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹15,000</span>
+          <span style="color:var(--muted);font-size:14px;">one-time setup</span>
+        </div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Complete clinic digital infrastructure — built and delivered. No monthly fee to start.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Professional website</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Appointment booking system</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">WhatsApp integration</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Mobile optimization</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Hosting setup</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Google Maps integration</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Patient inquiry system</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--teal);font-size:14px;">✓</span><span style="font-size:13px;">Basic SEO visibility</span></div>
+        </div>
+        <a href="#contact" style="display:block;width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--blue));border-radius:14px;color:#000;font-size:15px;font-weight:700;font-family:'Sora',sans-serif;text-align:center;text-decoration:none;">Get Started — ₹15,000</a>
+      </div>
+    </div>
+
+    <!-- Add-ons -->
+    <div class="reveal" style="margin-bottom:48px;">
+      <h3 style="text-align:center;font-size:22px;font-weight:700;margin-bottom:28px;color:var(--text);">Optional Add-On Features</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+        <div class="glass hover-card" style="border-radius:16px;padding:20px;border:1px solid var(--border);text-align:center;">
+          <div style="font-size:22px;margin-bottom:8px;">📊</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Analytics Dashboard</div>
+          <div style="font-size:18px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">+ ₹2,000</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Visitor & booking insights</div>
+        </div>
+        <div class="glass hover-card" style="border-radius:16px;padding:20px;border:1px solid var(--border);text-align:center;">
+          <div style="font-size:22px;margin-bottom:8px;">🔍</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">SEO Optimization</div>
+          <div style="font-size:18px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">+ ₹4,000</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Advanced Google rankings</div>
+        </div>
+        <div class="glass hover-card" style="border-radius:16px;padding:20px;border:1px solid var(--border);text-align:center;">
+          <div style="font-size:22px;margin-bottom:8px;">👥</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Multi-Doctor System</div>
+          <div style="font-size:18px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">+ ₹6,000</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Manage multiple doctors</div>
+        </div>
+        <div class="glass hover-card" style="border-radius:16px;padding:20px;border:1px solid var(--border);text-align:center;">
+          <div style="font-size:22px;margin-bottom:8px;">🤖</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">AI Chatbot</div>
+          <div style="font-size:18px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">+ ₹8,000+</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">24/7 automated patient queries</div>
+        </div>
+        <div class="glass hover-card" style="border-radius:16px;padding:20px;border:1px solid var(--border);text-align:center;">
+          <div style="font-size:22px;margin-bottom:8px;">⚙️</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Appointment Automation</div>
+          <div style="font-size:18px;font-weight:800;color:#f7b73c;font-family:'Sora',sans-serif;">+ ₹3,500</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Auto reminders & confirmations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maintenance Policy -->
+    <div class="reveal">
+      <div class="glass" style="border-radius:24px;padding:40px;border:1px solid rgba(13,207,181,0.15);max-width:800px;margin:0 auto;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+          <div style="width:44px;height:44px;border-radius:14px;background:rgba(13,207,181,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;">🛠️</div>
+          <div>
+            <h3 style="font-size:20px;font-weight:700;">Maintenance Policy</h3>
+            <p style="font-size:13px;color:var(--muted);">Clearly explained, nothing hidden</p>
+          </div>
+        </div>
+
+        <!-- 6 months free -->
+        <div style="background:rgba(95,245,128,0.08);border:1px solid rgba(95,245,128,0.2);border-radius:16px;padding:20px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:18px;">🎁</span>
+            <h4 style="font-size:16px;font-weight:700;color:#5ff580;">6 Months Free Maintenance Included</h4>
+          </div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.7;">From the day your clinic website goes live, the first 6 months of maintenance are completely free. This includes minor text updates, timing changes, bug fixes, and small modifications — at no extra cost to you.</p>
+        </div>
+
+        <!-- After 6 months -->
+        <div style="background:rgba(247,183,60,0.08);border:1px solid rgba(247,183,60,0.2);border-radius:16px;padding:20px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:18px;">📆</span>
+            <h4 style="font-size:16px;font-weight:700;color:#f7b73c;">After 6 Months — ₹500 Per Update</h4>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.7;">After the free period, any maintenance request is charged at a simple flat rate of ₹500 per issue or update. Examples include:</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;"><span style="color:#f7b73c;">→</span>Text and content changes</div>
+            <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;"><span style="color:#f7b73c;">→</span>Timing / schedule updates</div>
+            <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;"><span style="color:#f7b73c;">→</span>Bug fixes or small errors</div>
+            <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;"><span style="color:#f7b73c;">→</span>Minor design modifications</div>
+          </div>
+        </div>
+
+        <!-- Server scaling note -->
+        <div style="background:rgba(26,155,232,0.07);border:1px solid rgba(26,155,232,0.18);border-radius:16px;padding:20px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <span style="font-size:18px;margin-top:2px;">ℹ️</span>
+            <div>
+              <h4 style="font-size:14px;font-weight:700;color:#1A9BE8;margin-bottom:8px;">A Note on Server Scaling</h4>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;">Your clinic website is initially built and hosted for standard clinic-level usage. This comfortably handles the daily traffic of a typical clinic or specialist practice.</p>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:8px;">In the event your clinic grows significantly — for example, reaching very high daily traffic (around 10,000+ daily active users), the server infrastructure may require upgrades. If this becomes necessary, we will communicate transparently about any additional cloud or server costs required, which will depend entirely on the actual infrastructure needed at that time.</p>
+              <p style="font-size:13px;color:#1A9BE8;margin-top:8px;font-weight:500;">For the vast majority of clinics, this will never be a concern.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S9: LAUNCH JOURNEY -->
+<section id="journey" style="padding:100px 24px;background:linear-gradient(to bottom,var(--navy),var(--surface));overflow:hidden;">
+  <div class="mesh-bg">
+    <div class="mesh-orb" style="width:520px;height:520px;background:radial-gradient(circle,#0DCFB5,transparent);top:20%;right:-240px;opacity:0.1;"></div>
+  </div>
+  <div style="max-width:1150px;margin:0 auto;position:relative;z-index:2;">
+    <div class="journey-hero reveal" style="display:grid;grid-template-columns:1.05fr 0.95fr;gap:34px;align-items:center;margin-bottom:34px;">
+      <div>
+        <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:16px;">How It Comes Together</div>
+        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:16px;">From first call to live clinic website.</h2>
+        <p style="color:var(--muted);font-size:16px;line-height:1.7;max-width:560px;">A clear launch process gives doctors confidence before paying, and gives patients a smoother experience the moment the website goes live.</p>
+      </div>
+      <div class="mini-dashboard desktop-soft-hide">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div>
+            <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Clinic Readiness</div>
+            <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-top:4px;">Launch Preview</div>
+          </div>
+          <div style="width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;color:#041016;font-family:'Sora',sans-serif;font-weight:800;">MD</div>
+        </div>
+        <div class="dashboard-row">
+          <span style="font-size:13px;color:var(--muted);">Doctor profile</span>
+          <div class="metric-bar"><span style="--w:96%;"></span></div>
+        </div>
+        <div class="dashboard-row">
+          <span style="font-size:13px;color:var(--muted);">Booking flow</span>
+          <div class="metric-bar"><span style="--w:88%;"></span></div>
+        </div>
+        <div class="dashboard-row">
+          <span style="font-size:13px;color:var(--muted);">Mobile experience</span>
+          <div class="metric-bar"><span style="--w:94%;"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+      <div class="journey-card premium-card hover-card reveal">
+        <div class="journey-step">01</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:9px;">Collect Clinic Details</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">We gather doctor profile, services, timings, location, contact details, and patient instructions.</p>
+      </div>
+      <div class="journey-card premium-card hover-card reveal">
+        <div class="journey-step">02</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:9px;">Design the Experience</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">The website is structured around patient questions: availability, booking, trust, directions, and follow-up.</p>
+      </div>
+      <div class="journey-card premium-card hover-card reveal">
+        <div class="journey-step">03</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:9px;">Connect Core Features</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">Appointment forms, WhatsApp, maps, inquiry flow, and mobile optimization are connected before launch.</p>
+      </div>
+      <div class="journey-card premium-card hover-card reveal">
+        <div class="journey-step">04</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:9px;">Go Live With Support</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">Once approved, the site goes live with 6 months of included maintenance for small updates and fixes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S9: WHY CHOOSE US -->
+<section style="padding:100px 24px;background:var(--navy);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal" style="text-align:center;margin-bottom:64px;">
+      <div class="tag" style="background:rgba(13,207,181,0.12);color:var(--teal);margin-bottom:16px;">Why MedDigital</div>
+      <h2 style="font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-1px;">Designed for Doctors. Trusted by Patients.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">🏔️</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Highly-Focused Service</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">We understand the local healthcare landscape, patient behavior, and language of your clinic's patient demographic.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">💰</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Genuinely Affordable</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">National agencies charge 5–10× more for less. Our pricing is designed specifically for local clinics and individual doctors.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">⚡</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Fast Delivery</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">Your clinic website goes live quickly. No endless back-and-forth — we move efficiently and deliver on time.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">🤝</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Personalized Support</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">You get direct WhatsApp and phone support from our team — not a ticket system or a call center.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">🏥</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Healthcare Specialization</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">We work exclusively in healthcare digital services — not a general web agency. Every feature is designed for clinics.</p>
+      </div>
+      <div class="glass-strong hover-card reveal" style="border-radius:22px;padding:32px;text-align:center;">
+        <div style="font-size:40px;margin-bottom:14px;">🧭</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">Local Understanding</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">We know what patients in your area need and how they search — your clinic will be positioned correctly from day one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ S10: CLOSING + CONTACT -->
+<section id="contact" style="padding:120px 24px;background:linear-gradient(135deg,#060d18,#071220);position:relative;overflow:hidden;">
+  <div class="mesh-bg">
+    <div class="mesh-orb" style="width:700px;height:700px;background:radial-gradient(circle,#0DCFB5,transparent);bottom:-200px;left:-200px;opacity:0.12;"></div>
+    <div class="mesh-orb" style="width:500px;height:500px;background:radial-gradient(circle,#1A9BE8,transparent);top:-100px;right:-100px;opacity:0.1;"></div>
+  </div>
+  <div style="max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:2;">
+    <div class="reveal">
+      <div style="font-size:48px;margin-bottom:20px;">💙</div>
+      <h2 style="font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1.5px;line-height:1.2;margin-bottom:24px;">
+        We are working to make healthcare more<br>
+        <span class="grad-text">digitally accessible</span> for patients and<br>
+        easier to manage for doctors.
+      </h2>
+      <p style="color:var(--muted);font-size:16px;max-width:560px;margin:0 auto 48px;line-height:1.7;">
+        One clinic at a time, starting locally — we are building a better digital healthcare experience for doctors and patients.
+      </p>
+
+      <!-- Contact card -->
+      <div class="glass" style="border-radius:24px;padding:40px;border:1px solid rgba(13,207,181,0.2);max-width:500px;margin:0 auto 40px;">
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:24px;">Ready to get started?</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+          <a href="https://wa.me/918822093903" target="_blank" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+            <span style="font-size:18px;">💬</span>
+            <div style="text-align:left;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">WhatsApp Us</div>
+              <div style="font-size:15px;font-weight:600;color:var(--teal);">+91 88220 93903</div>
+            </div>
+          </a>
+          <a href="mailto:dhiraj.deka@meddigital.in" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;text-decoration:none;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+            <span style="font-size:18px;">📧</span>
+            <div style="text-align:left;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Email</div>
+              <div style="font-size:15px;font-weight:600;color:var(--teal);">dhiraj.deka@meddigital.in</div>
+            </div>
+          </a>
+          <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:18px;">📍</span>
+            <div style="text-align:left;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Serving</div>
+              <div style="font-size:15px;font-weight:600;">Modern Medical Clinics</div>
+            </div>
+          </div>
+        </div>
+        <a href="mailto:dhiraj.deka@meddigital.in" style="display:block;padding:14px;background:linear-gradient(135deg,var(--teal),var(--blue));border-radius:14px;color:#000;font-size:15px;font-weight:700;font-family:'Sora',sans-serif;text-decoration:none;">Book a Free Consultation</a>
+      </div>
+
+      <p style="font-size:12px;color:rgba(255,255,255,0.25);">Free consultation. No obligation. Built for doctors, by people who care about healthcare.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="background:#040810;border-top:1px solid var(--border);padding:28px 24px;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;">
+        <span style="color:#000;font-size:12px;font-weight:800;font-family:'Sora',sans-serif;">M</span>
+      </div>
+      <span style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;">MedDigital<span style="color:var(--teal);">.</span></span>
+    </div>
+    <div style="font-size:12px;color:var(--muted);">Healthcare Digital Services</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.2);">© 2025 MedDigital. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer for reveal animations
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// Staggered card reveals
+document.querySelectorAll('.hover-card.reveal').forEach((card, i) => {
+  card.style.transitionDelay = `${(i % 4) * 80}ms`;
+});
+
+// Reading progress polish
+const scrollProgress = document.getElementById('scrollProgress');
+const updateScrollProgress = () => {
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+  scrollProgress.style.width = `${Math.min(progress, 100)}%`;
+};
+updateScrollProgress();
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+// Smooth active nav
+const sections = document.querySelectorAll('section[id]');
+</script>
+</body>
+</html>
